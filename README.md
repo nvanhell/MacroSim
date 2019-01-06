@@ -6,7 +6,7 @@ This project is an attempt at simulating a dynamic multi-period macroeconomy bas
 
 ## Roadmap
 
-#### Completed:
+#### Complete:
 
 - Demand for goods through utility-maximization (solution solved by hand due to Scipy implementation being excessively slow)
 
