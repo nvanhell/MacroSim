@@ -2,7 +2,7 @@
 
 ## Description
 
-This project is an attempt at simulating a dynamic multi-period macroeconomy based on microeconomic behaviour and a simple life-cycle model. Two independent economies are simulated side-by-side to allow for comparisons between the two economies when parameters or policies are changed. There are many goods (the specific number of goods may be set during initialization) where one market exists per good. Consumers demand goods, and firms supply them. Firms demand labour (supplied by households) and capital (not currently implemented). Moreover, a government exists which can implement various policies.
+This project is an attempt at simulating a dynamic multi-period macroeconomy based on microeconomic behaviour and a simple life-cycle model. Two independent economies are simulated side-by-side to allow for comparisons between the two when parameters or policies are changed. The simulation is generalized and supports any number of consumption goods and any number of firms per market. The general idea behind the economy is simply that goods are demanded by households and then produced by firms. Firms then demand homogeneous labour and capital which allow them to produce goods in the first place. Various governmental policies can be implemented, such as various taxes and/or a minimum wage.
 
 ## Roadmap
 
@@ -18,21 +18,23 @@ This project is an attempt at simulating a dynamic multi-period macroeconomy bas
 
 - Cost-minimzation by firms: Computation and optimal input targeting need better implementation
 
-- Government policies: Consumption tax, tax on individual goods, and income tax are all functional, but governmending is not. Minmum wage needs implementation
+- Government policies: Consumption tax, tax on individual goods, and income tax are all functional, but no government spending mechanism is implemented. Minmum wage also needs implementation
 
-- Savings and investment decisions: Currently only a basic dividend payout from firm profits
+- Savings, investment and basic stock market are very primitive
 
-- Heterogeneity between workers: Exogenous variation between workers exists, but no endogenous factors such as education or work experience
+- Heterogeneity between workers: Exogenous variation between worker productivity is randomly generated, but no endogenous factors such as education or work experience currently exist. I would also like to construct economy-specific income/wealth distributions imbeded in wxPython in order to visualize inequality in the model
 
-- GUI: Mostly functional, but need to clean it up and allow users to edit simulation and economic parameters
+- wxPython GUI: Mostly functional, but need to clean it up and allow users to edit simulation and economic parameters
 
 #### To-do:
 
-- work-leisure optimization by individuals
+- Work-leisure optimization by individuals
 
 - Price mechanism
 
-- Code optimization (if needed). Current code is implemented in a logical order rather than in an efficient order.
+- Imperfectly competitive behaviour between firms
+
+- Code optimization. Current code is implemented in a logical order rather than in an efficient order.
 
 ## Installation
 
