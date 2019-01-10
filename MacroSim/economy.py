@@ -4,8 +4,6 @@ import random
 
 
 # Number of consumption goods in the economy
-# Note: Setting this too high drastically increases the time it takes to optimize a consumer's utility function
-# Recommended to keep below ~20 goods
 NUMBER_OF_GOODS = 5
 
 
@@ -19,14 +17,14 @@ class MacroEconomy:
         self.gdp = 0  # Nominal GDP
         self.consumption = 0  # Nominal consumption
         self.investment = 0  # Nominal investment
-        self.interest_rate = 0  # Savings rate
+        self.interest_rate = 0  # Interest rate
 
         self.government = Government()
 
         # Every good is supplied/demanded in a market, and markets are kept track using this array
         self.markets = np.array([Market(self, number_of_firms) for i in range(NUMBER_OF_GOODS)])
         self.max_firms_in_market = number_of_firms
-        self.price_vector = [market.price for market in self.markets]
+        self.price_vector = [market.price for market in self.markets]  #
 
         # Array to keep track of every worker
         self.workers = [Worker(self, productivity_parameters[i], ages[i], number_of_firms, util_func_params[i]) for i in range(pop)]
@@ -50,6 +48,7 @@ class MacroEconomy:
             self.worker_match(match)
 
     def create_worker(self, util_func_params):
+        # Creates a new (unemployed) worker
         new_worker = Worker(self, np.random.normal(1, 0.5), 0, self.max_firms_in_market, util_func_params)
         self.workers.append(new_worker)
         self.unemployed_list.append(new_worker)
@@ -110,10 +109,9 @@ class MacroEconomy:
         for market in self.markets:
             for firm in market.firms:
                 firm.wage = firm.get_wage()
-                if firm.get_vacancies() > 0:
-                    if firm.wage >= match.wage:
-                        match.wage = firm.wage
-                        match.employer = firm
+                if firm.get_vacancies() > 0 and firm.wage >= match.wage:
+                    match.wage = firm.wage
+                    match.employer = firm
         # Once the highest paying firm is found, then update the relevant variables
         if match.employer is not None:
             match.employer.labour += match.get_productivity()
@@ -138,7 +136,7 @@ class Government:
 class Market:
     def __init__(self, econ, number_of_firms):
         self.econ = econ
-        self.price = 1  # Single market price for a consumption good
+        self.price = 1  # Market price for a consumption good
         self.quantity_demanded = 1  # Aggregate quantity demanded for the good
         self.quantity_supplied = 1  # Aggregate quantity supplied for the good
         self.quantity_sold = 1  # Actual output sold (taking the lower quantity between Qs and Qd)
@@ -153,7 +151,7 @@ class Market:
 class Firm:
     def __init__(self, market, tfp):
         self.market = market  # Reference to the market in which the firm belongs
-        self.money = 1000000
+        self.money = 0
         self.tfp = tfp
         self.labour = 0  # Quantity of homogeneous labour employed by the firm
         self.capital = 1  # Quantity of capital operated by the firm
@@ -161,10 +159,10 @@ class Firm:
         self.target_K = 0
         self.wage = 0  # Wage rate paid to all employees
         self.employee_list = []  # List of every employee reference employed by the firm
-        self.vacancies = 0  # Number of vacancies by the firm
-        self.a = [2/3, 1/3]  # Parameters on L and K in the Cobb-Douglas function
+        self.vacancies = 0  # Number of vacancies in the firm
+        self.a = [2/3, 1/3]  # Parameters on L and K in its Cobb-Douglas production function
 
-        self.NUMBER_OF_SHARES = 1000000  # Each firm has 1 million shares
+        self.NUMBER_OF_SHARES = 1000000  # Each firm has 1 million shares, number chosen arbitrarily
         self.labour_income = 0
         self.capital_income = 0
 
@@ -180,6 +178,7 @@ class Firm:
 
     def get_vacancies(self):
         # Returns number of vacancies for a particular period through a matching function
+        # to do: use a better function
         return max((self.target_L - self.labour) / 10, 100)
 
     def get_output(self):
@@ -195,14 +194,14 @@ class Firm:
 
     def update_income_payments(self):
         # Splitting the firm's revenue into two parts: One to capital, the other to labour
-        # Euler's theorem: F(L, K) = MPL*L + MPK*K
-        # Therefore, the shares going to income and labour are MPL*L and MPK*K respectively
-        total_income = self.market.price * self.market.quantity_supplied
+        # The two parts are taken from Euler's theorem: F(L, K) = MPL*L + MPK*K
+        # Therefore, the shares going to income and labour should be MPL*L and MPK*K respectively
         self.labour_income = self.market.price * self.mpl() * self.labour
         self.capital_income = self.market.price * self.mpk() * self.capital
         #print(total_income - self.labour_income - self.capital_income)
 
     # Methods below are for cost-minimization
+    # to do: replace this whole section with hand-written solution
     def cost_func(self, x, params):
         sign = params[0]
         int_rate = params[1]
@@ -261,7 +260,7 @@ class Worker:
         elif self.employer is None:
             self.econ.unemployed_list.remove(self)
         self.econ.workers.remove(self)
-        self.econ.create_worker(util_func_params)  # Creating a new worker to avoid
+        self.econ.create_worker(util_func_params)  # Creating a new worker
 
     def get_productivity(self):
         # Returns the productivity of a worker.
