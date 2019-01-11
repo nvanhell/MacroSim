@@ -98,7 +98,7 @@ class MacroEconomy:
     def get_matches(self):
         # Returns the number of aggregate matches in the economy
         if self.vacancies > 0 and len(self.unemployed_list) > 0:
-            return int(self.matching_efficiency * self.vacancies**0.5 * (len(self.unemployed_list))**0.5)
+            return int(random.uniform(0.8,1.1)*self.matching_efficiency * self.vacancies**0.5 * (len(self.unemployed_list))**0.5)
         else:
             return 0
 
@@ -110,8 +110,10 @@ class MacroEconomy:
             for firm in market.firms:
                 firm.wage = firm.get_wage()
                 if firm.get_vacancies() > 0 and firm.wage >= match.wage:
-                    match.wage = firm.wage
+                    # Match is found, worker becomes employed
+                    match.wage = firm.wage * match.bargaining_power
                     match.employer = firm
+                    firm.bargaining_power.append(match.bargaining_power)
         # Once the highest paying firm is found, then update the relevant variables
         if match.employer is not None:
             match.employer.labour += match.get_productivity()
@@ -120,6 +122,10 @@ class MacroEconomy:
             self.vacancies -= 1
             self.unemployed_list.remove(match)
 
+    def get_income_dist(self):
+        income_dist = np.array([worker.labour_income for worker in self.workers])
+        return np.sort(income_dist)
+
 
 class Government:
     def __init__(self):
@@ -127,10 +133,18 @@ class Government:
         self.income_tax = 0  # Tax rate on all income
         self.consumption_tax = 0  # Tax rate on all consumption goods
         self.goods_tax = [0 for i in range(NUMBER_OF_GOODS)]  # Tax rate on a particular consumption good
+        # Minimum wage rate is set at some percentile of the economy-wide income distribution
+        # For example, a value of 0.3 sets the minimum wage at the income of the person at the 30th percentile
+        self.minimum_wage_rate = 0.5
+        self.minimum_wage = 0
 
     def get_good_tax(self, i):
         # Returns total tax rate on a particular good
         return self.consumption_tax + self.goods_tax[i]
+
+    def set_minimum_wage(self, income_dist):
+        self.minimum_wage = np.percentile(income_dist, 30)
+        print(self.minimum_wage)
 
 
 class Market:
@@ -151,7 +165,6 @@ class Market:
 class Firm:
     def __init__(self, market, tfp):
         self.market = market  # Reference to the market in which the firm belongs
-        self.money = 0
         self.tfp = tfp
         self.labour = 0  # Quantity of homogeneous labour employed by the firm
         self.capital = 1  # Quantity of capital operated by the firm
@@ -159,6 +172,7 @@ class Firm:
         self.target_K = 0
         self.wage = 0  # Wage rate paid to all employees
         self.employee_list = []  # List of every employee reference employed by the firm
+        self.bargaining_power = []
         self.vacancies = 0  # Number of vacancies in the firm
         self.a = [2/3, 1/3]  # Parameters on L and K in its Cobb-Douglas production function
 
@@ -192,12 +206,19 @@ class Firm:
         # Returns marginal product of capital
         return self.tfp * self.a[1] * self.labour ** self.a[0] * self.capital ** (self.a[1] - 1)
 
+    def get_average_bargaining_power(self):
+        return sum(self.bargaining_power) / float(len(self.bargaining_power))
+
     def update_income_payments(self):
         # Splitting the firm's revenue into two parts: One to capital, the other to labour
         # The two parts are taken from Euler's theorem: F(L, K) = MPL*L + MPK*K
         # Therefore, the shares going to income and labour should be MPL*L and MPK*K respectively
-        self.labour_income = self.market.price * self.mpl() * self.labour
+        average_bargaining_power = self.get_average_bargaining_power()
+        labour_income = self.market.price * self.mpl() * self.labour
+        self.labour_income = labour_income
         self.capital_income = self.market.price * self.mpk() * self.capital
+        # to do: profit income
+        self.profit_income = labour_income * (1-average_bargaining_power)
         #print(total_income - self.labour_income - self.capital_income)
 
     # Methods below are for cost-minimization
@@ -240,7 +261,7 @@ class Worker:
         self.consumption = 0
         self.investment = 0
         self.savings_rate = 0  # Exogenous savings rate unique to each worker
-        self.bargaining_power = 1  # Exogenous bargaining power unique to each worker
+        self.bargaining_power = 0.7  # Exogenous bargaining power unique to each worker
         # If worker is employed, job is a reference to the firm that employs the worker
         self.employer = None
         self.hours_worked = 8.0  # Number of hours worked in a 24 hour day
@@ -267,15 +288,26 @@ class Worker:
         # The division by 8 is to normalize the productivity in reference to an 8 hour work day
         return self.productivity * self.hours_worked / 8
 
-    def update_income(self):
+    def update_income(self, min_wage):
         # Calculating the worker's labour income received in the period
         if self.employer is not None:
             self.labour_income = (self.get_productivity() / self.employer.labour) * self.employer.labour_income
-        # Calculating the worker's capital income received in the period
+            # Applying minimum wage law
+            if self.labour_income < min_wage:
+                # If worker's smallest possible wage is below the minimum wage, then this worker becomes unemployed
+                self.employer = None
+                self.econ.unemployed_list.append(self)
+                print("Unemployed worker with wage: " + str(self.labour_income) + " - MW: " + str(min_wage))
+            else:
+                # If the worker stays employed, then wage is reduced by a bargaining power factor.
+                # However, if this reduced wage is below the minimum wage, then the worker is simply paid the minimum wage
+                # In this second case, the minimum wage helps increase this worker's purchasing power
+                self.labour_income = max(self.labour_income * self.bargaining_power, min_wage)
+        # Calculating the worker's capital income received from firms in the period
         self.capital_income = 0
         for i, market in enumerate(self.econ.markets):
             for j, firm in enumerate(market.firms):
-                self.capital_income = firm.capital_income * (self.stocks_owned[i][j] / firm.NUMBER_OF_SHARES)
+                self.capital_income = (firm.capital_income + firm.profit_income) * (self.stocks_owned[i][j] / firm.NUMBER_OF_SHARES)
         # Updating the appropriate income, consumption, and investment variables
         self.income = (self.labour_income + self.capital_income) * (1 - self.econ.government.income_tax)
         self.consumption = (1-self.savings_rate) * self.income
