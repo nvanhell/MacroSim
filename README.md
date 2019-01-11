@@ -6,6 +6,8 @@ This project is an attempt at simulating a dynamic multi-period macroeconomy bas
 
 The general idea behind the model is that goods are demanded by workers and then supplied by firms where exactly one good is traded in each market. Firms demand labour and capital to produce goods. Both workers and firms behave in optimizing behaviour. Some government policies are modeled, such as various taxes and a minimum wage. The simulation is generalized and supports any number of consumption goods and any number of firms per market. 
 
+![untitled](https://user-images.githubusercontent.com/45185574/51009851-c54f7880-151f-11e9-87ac-fa70b1f62d0a.png)
+
 ## Roadmap
 
 #### Complete:
