@@ -2,9 +2,11 @@
 
 ## Description
 
-This project is an attempt at simulating a dynamic multi-period macroeconomy based on microeconomic behaviour and a simple life-cycle model in Python. Two independent economies are simulated side-by-side to allow for comparisons between the two when parameters or policies are changed. The project is intended to be a proof of concept and the economic modeling is largely homemade.
+This Python project is an attempt at simulating a dynamic multi-period macroeconomy based on microeconomic behaviour. Two independent economies are simulated side-by-side to allow for comparisons between the two when parameters or policies are changed. The project is intended to be a proof of concept and the economic modeling is largely homemade.
 
 The general idea behind the model is that goods are demanded by workers and then supplied by firms where exactly one good is traded in each market. Firms demand labour and capital to produce goods. Both workers and firms behave in optimizing behaviour. Some government policies are modeled, such as various taxes and a minimum wage. The simulation is generalized and supports any number of consumption goods and any number of firms per market. 
+
+The image below is an illustration of the GUI in order to visualize some economic variables in the program. The upper graph displays variables of the first economy while the lower graph displays the second.
 
 ![untitled](https://user-images.githubusercontent.com/45185574/51009851-c54f7880-151f-11e9-87ac-fa70b1f62d0a.png)
 
