@@ -34,7 +34,7 @@ class ControlPanel(wx.Panel):
         self.start_button = wx.Button(self, -1, "Start", size=(60, 40), pos=(5, 10))
         self.start_button.Bind(wx.EVT_BUTTON, self.start_stop)
 
-        self.config_button = wx.Button(self, -1, "Edit Config", size=(80, 40), pos=(5, 10))
+        self.config_button = wx.Button(self, -1, "Edit", size=(80, 40), pos=(5, 10))
         self.config_button.Bind(wx.EVT_BUTTON, self.config)
 
         self.sizer.Add(self.start_button)
@@ -72,7 +72,7 @@ class ConfigPanel(wx.Panel):
 class ToolBar:
     def __init__(self, parent):
         self.tool_bar = parent.CreateToolBar()
-        self.labels = [['GDP', 'Consumption', 'Investment', 'Unemployment', 'Population'],
+        self.labels = [['GDP', 'Consumption', 'Investment', 'Unemployment', 'Matches'],
                        ['Price', 'Quantity']]
         self.combo_macro = wx.ComboBox(self.tool_bar, size=(100, 20), style=wx.CB_READONLY, choices=self.labels[0])
         self.combo_macro.Bind(wx.EVT_COMBOBOX, self.set_graph)
@@ -137,6 +137,7 @@ class Graph(wx.Panel):
         self.axes.clear()
         #self.axes.hold(True)
         self.axes.set_ylabel(label)
+        self.axes.set_xlabel('Time')
         self.axes.grid(True, color="grey")
         if type(y[0]) != list:
             self.axes.plot(x, y, color="grey")
