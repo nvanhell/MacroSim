@@ -46,6 +46,8 @@ The images below are illustrations of the GUI that is used to help visualize som
 
 - Code optimization. Current code is implemented in a logical order rather than in an efficient order.
 
+- Allowing simulation data to be saved into a spreadsheet format.
+
 ## Installation
 
 The program should run successfully by simply installing the requirements and running main.py.
