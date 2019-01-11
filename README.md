@@ -41,7 +41,3 @@ The general idea behind the model is that goods are demanded by workers and then
 ## Installation
 
 The program should run successfully by simply installing the requirements and running main.py.
-
-## My model
-
-![equation](https://latex.codecogs.com/png.latex?L%20%3D%20%5Cprod_%7Bj%3D1%7D%5E%7Bn%7Dx_j%5Ea%5Ej%20&plus;%20%5Clambda%20%28I%20-%20%5Csum_%7Bj%3D1%7D%5E%7Bn%7Dp_ix_i%29)
