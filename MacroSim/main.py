@@ -18,7 +18,7 @@ class Simulation(threading.Thread):
         self.retirement_age = 65  # Age at which a worker retires
         self.age_to_die = 80  # Age at which a worker gets deleted and replaced with a new worker
         # Lists of the graph labels
-        self.macro_labels = ['GDP', 'Consumption', 'Investment', 'Unemployment', 'Population']
+        self.macro_labels = ['GDP', 'Consumption', 'Investment', 'Unemployment', 'Matches']
         self.good_labels = ['Price', 'Quantity']
         # The following are variables used to store economic variables so that they can be graphed
         self.x = []
@@ -77,6 +77,9 @@ class Simulation(threading.Thread):
 
                 # 3: Labour market -------------------------------------------------------------------------------------
 
+                # Updating minimum wage
+                econ.government.set_minimum_wage(econ.get_income_dist())
+
                 # Re-calculating the number of aggregate vacancies which is used in the matching function
                 econ.vacancies = 0
                 for market in econ.markets:
@@ -107,7 +110,7 @@ class Simulation(threading.Thread):
                 econ.investment = 0
                 # re-summing aggregate quantities (gdp, consumption, investment)
                 for worker in econ.workers:
-                    worker.update_income()
+                    worker.update_income(econ.government.minimum_wage)
                     econ.consumption += worker.consumption
                     econ.investment += worker.investment
                 econ.gdp = econ.consumption + econ.investment
@@ -125,7 +128,7 @@ class Simulation(threading.Thread):
             self.y_macro[1][econ.id].append(econ.consumption)
             self.y_macro[2][econ.id].append(econ.investment)
             self.y_macro[3][econ.id].append(len(econ.unemployed_list) / len(econ.workers))
-            self.y_macro[4][econ.id].append(len(econ.workers))
+            self.y_macro[4][econ.id].append(econ.get_matches())
             for i in range(economy.NUMBER_OF_GOODS):
                 self.y_price[i][econ.id].append(econ.markets[i].price)
                 self.y_quantity[i][econ.id].append(econ.markets[i].quantity_sold)
