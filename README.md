@@ -6,7 +6,7 @@ This Python project is an attempt at simulating a dynamic multi-period macroecon
 
 The general idea behind the model is that goods are demanded by workers and then supplied by firms where exactly one good is traded in each market. Firms demand labour and capital to produce goods. Both workers and firms behave in optimizing behaviour. Some government policies are modeled, such as various taxes and a minimum wage. The simulation is generalized and supports any number of consumption goods, firms, and consumers.
 
-The images below are samples of the GUI which is used to help visualize some of the economic variables in the model. The upper graph displays variables of the first economy while the lower graph displayes the variables in the second.
+The images below are samples of the GUI which is used to help visualize some of the economic variables in the model. The upper graph displays variables of the first economy while the lower graph displayes the variables in the second. In this example, unemployment was initialized at some arbitrarily large (50%) value and evolves downwards over time as workers are matched with employers.
 
 
 ![untitled2](https://user-images.githubusercontent.com/45185574/51011923-912c8580-1528-11e9-8013-f27fdac51ef3.png)
