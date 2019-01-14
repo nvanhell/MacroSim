@@ -4,9 +4,9 @@
 
 This Python project is an attempt at simulating a dynamic multi-period macroeconomy based on microeconomic behaviour. Two independent economies are simulated side-by-side to allow for comparisons between the two when parameters or policies are changed. The project is intended to be a proof of concept and the economic modeling is largely homemade.
 
-The general idea behind the model is that goods are demanded by workers and then supplied by firms where exactly one good is traded in each market. Firms demand labour and capital to produce goods. Both workers and firms behave in optimizing behaviour. Some government policies are modeled, such as various taxes and a minimum wage. The simulation is generalized and supports any number of consumption goods and any number of firms per market. 
+The general idea behind the model is that goods are demanded by workers and then supplied by firms where exactly one good is traded in each market. Firms demand labour and capital to produce goods. Both workers and firms behave in optimizing behaviour. Some government policies are modeled, such as various taxes and a minimum wage. The simulation is generalized and supports any number of consumption goods, firms, and consumers.
 
-The images below are illustrations of the GUI that is used to help visualize some of the economic variables. The upper graph displays variables of the first economy while the lower graph displays the second.
+The images below are samples of the GUI which is used to help visualize some of the economic variables in the model. The upper graph displays variables of one economy while the lower graph displays the variables in the other economy.
 
 
 ![untitled2](https://user-images.githubusercontent.com/45185574/51011923-912c8580-1528-11e9-8013-f27fdac51ef3.png)
@@ -19,7 +19,7 @@ The images below are illustrations of the GUI that is used to help visualize som
 
 #### Complete:
 
-- Demand for goods through utility-maximization (solution solved by hand due to Scipy implementation being excessively slow).
+- Demand for goods through utility-maximization (for now, the solution is solved by hand due to Scipy implementation being excessively slow).
 
 - Supply of goods through production by firms.
 
