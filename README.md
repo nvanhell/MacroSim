@@ -4,7 +4,7 @@
 
 This Python project is an attempt at simulating a dynamic multi-period macroeconomy based on microeconomic behaviour. Two independent economies are simulated side-by-side to allow for comparisons between the two when parameters or policies are changed. The project is intended to be a proof of concept and the economic modeling is largely homemade.
 
-The general idea behind the model is that goods are demanded by workers and then supplied by firms where exactly one good is traded in each market. Firms demand labour and capital to produce goods. Both workers and firms behave in optimizing behaviour. Some government policies are modeled, such as various taxes and a minimum wage. The simulation is generalized and supports any number of consumption goods, firms, and consumers.
+The general idea behind the program is that goods are both produced and demanded in each market. Prices adjust in response to excess quantity demanded or quantity supplied. Firms demand labour and capital to produce goods which are producedin a labour market and capital market. Both workers and firms behave in optimizing behaviour. Some government policies are modeled, such as various taxes and a minimum wage. The program is not restricted in the number of consumption goods, firms, and consumers.
 
 The images below are samples of the GUI which is used to help visualize some of the economic variables in the model. The upper graph displays variables of the first economy while the lower graph displayes the variables in the second. In this example, unemployment was initialized at some arbitrarily large (50%) value and evolves downwards over time as workers are matched with employers.
 
@@ -19,29 +19,29 @@ The images below are samples of the GUI which is used to help visualize some of 
 
 #### Complete:
 
-- Demand for goods through utility-maximization (for now, the solution is solved by hand due to Scipy implementation being excessively slow).
-
-- Supply of goods through production by firms.
-
 - Labour market matching mechanism.
 
 #### Partially Complete:
 
+- Price mechanism.
+
+- Demand for goods through utility-maximization (utility function is temporary).
+
+- Supply of goods through production by firms (profit function is temporary).
+
 - Cost-minimzation by firms: Computation and optimal input targeting need better implementation.
 
-- Government policies: Consumption tax, tax on individual goods, and income tax are all functional, but no government spending mechanism is implemented.
+- Government policies: Consumption tax, tax on individual goods, and income tax are all functional. Government spending mechanism has not been implemented yet.
 
 - Savings, investment and basic stock market are placeholders.
 
-- Randomly generated exogenous variation between worker productivity exists, but no endogenous factors such as education or work experience currently exist. I would also like to construct economy-specific income/wealth distributions imbeded in wxPython in order to visualize inequality in the model.
+- Randomly generated exogenous variation between worker productivity exists, but no endogenous factors such as education or work experience are currently implemented.
 
 - wxPython GUI: Mostly functional, but need to clean it up and allow users to edit simulation and economic parameters.
 
 #### To-do:
 
 - Work-leisure optimization by workers.
-
-- Price mechanism.
 
 - Imperfectly competitive behaviour between firms.
 
